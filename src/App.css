@@ -11,7 +11,9 @@
 }
 
 .extra-task-data {
-    margin: 1em;
+    text-align: center;
+    width: 100%;
+    font-weight: 500;
 }
 
 .task-prop {

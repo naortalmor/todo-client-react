@@ -1,14 +1,27 @@
 import React from 'react';
-import SaveIcon from '@material-ui/icons/Save';
-import CancelIcon from '@material-ui/icons/Cancel';
 import Button from '@material-ui/core/Button';
 import { Todo } from '../interfaces/todo.interface';
 import TextField from '@material-ui/core/TextField';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Theme, createStyles, withStyles } from '@material-ui/core';
 
 interface AddTaskProps {
-    addTask: (newTask:Partial<Todo>) => void
-    closeAddTask: () => void
+    addTask: (newTask:Partial<Todo>) => void;
+    closeAddTask: () => void;
+    classes:any;
 }
+
+const styles =(theme:Theme) => createStyles({
+    form: {
+        display: 'flex',
+        flexDirection: 'column',
+        margin: 'auto',
+        width: 'fit-conent'
+    },
+    formControl: {
+        marginTop: theme.spacing(2),
+        minWidth: 120,
+      }
+})
 
 export class AddTask extends React.Component<AddTaskProps, {newTask: Partial<Todo>}> {
     constructor(props:AddTaskProps) {
@@ -25,26 +38,33 @@ export class AddTask extends React.Component<AddTaskProps, {newTask: Partial<Tod
     }
 
     render() {
+        const { classes } = this.props;
         return (
-            <form onSubmit={this.submitTask} className="col half-width form-container">
-                <TextField id="header" label="Header" onChange={this.handleChanges} value={this.state.newTask.header}></TextField>
-                <TextField id="description" label="Description" onChange={this.handleChanges} value={this.state.newTask.description}></TextField>
-                <div className="row ctr m-l">
-                    <Button variant="contained"
-                            color="primary"
-                            size="small"
-                            startIcon={<SaveIcon />} 
-                            onClick={this.submitTask}>
-                        Save
-                    </Button>
-                    <Button variant="contained"
-                        color="secondary"
-                        size="small"
-                        startIcon={<CancelIcon />} onClick={this.onCacnel}>
+            <Dialog fullWidth={true} maxWidth="xs" open={true} onClose={this.onCacnel} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Add New Todo Task</DialogTitle>
+                <DialogContent>
+                    <form className={classes.form}>
+                        <TextField id="header"
+                                label="Header" 
+                                onChange={this.handleChanges} 
+                                value={this.state.newTask.header}>
+                        </TextField>
+                        <TextField id="description" 
+                                label="Description" 
+                                onChange={this.handleChanges} 
+                                value={this.state.newTask.description}>
+                        </TextField>
+                    </form>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={this.onCacnel} color="secondary">
                         Cancel
                     </Button>
-                </div>
-            </form>
+                    <Button onClick={this.submitTask} color="primary">
+                        Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
         )
     }
 
@@ -69,3 +89,5 @@ export class AddTask extends React.Component<AddTaskProps, {newTask: Partial<Tod
         this.props.addTask(this.state.newTask);
     }
 }
+
+export default withStyles(styles, {withTheme: true})(AddTask)

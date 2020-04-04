@@ -6,10 +6,11 @@ import { connect } from 'react-redux';
 import { AppState } from '../store/store';
 import axios, { AxiosResponse } from 'axios';
 import { urlConfig } from '../consts/config';
-import Button from '@material-ui/core/Button'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import { AddTask } from './add-task.component';
+import AddTask from './add-task.component';
 import { Dispatch } from 'redux';
+import swal from 'sweetalert';
+import { IconButton } from '@material-ui/core';
 
 interface ContainerProps {
     todos:Todo[];
@@ -43,21 +44,19 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
                            toggleTaskStatus={() => this.toggleStaus(todo)} 
                            removeTask={() => this.removeTodoTask(todo.id)}>
             </TodoComponent>)
+
         return (
             <div className="col half-width ctr">
+                <IconButton aria-label="add" onClick={ this.toggleAddTask }>
+                    <AddCircleOutlineIcon color="primary" titleAccess="Add task" className="material-icons"></AddCircleOutlineIcon>
+                </IconButton>
                 {todosList}
                 { this.state.add_task ? 
                     <AddTask 
                         addTask={(newTask:Partial<Todo>) => this.addNewTask(newTask)} 
                         closeAddTask={this.toggleAddTask}>
                     </AddTask> : 
-                    <Button variant="contained" 
-                        className="m-l"
-                        color="primary" 
-                        startIcon={<AddCircleOutlineIcon/>} 
-                        onClick={ this.toggleAddTask }>
-                        Add Task
-                </Button>
+                    ''
                 }
             </div>
         );
@@ -89,6 +88,9 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
                 ...newTaskRespose.data,
                 creation_date: new Date(newTaskRespose.data.creation_date)
             }
+            swal("Your task has been created successfully!", {
+                icon: "success",
+              });
             this.toggleAddTask();
             this.props.addTask(todo);
         })
@@ -96,7 +98,12 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
 
     private removeTodoTask(todoId:string):void {
         axios.delete(`http://${urlConfig.url}:${urlConfig.port}/api/todo/${todoId}/`)
-            .then((res:AxiosResponse) => this.props.removeTodo(todoId))
+            .then((res:AxiosResponse) => {
+                swal("Your task has been deleted!", {
+                    icon: "success",
+                  });
+                this.props.removeTodo(todoId)}
+            )
     }
 }
 

@@ -1,9 +1,11 @@
 import React from 'react';
 import {Todo} from '../interfaces/todo.interface';
-import Radio from '@material-ui/core/Radio'
-import ExpandMore from '@material-ui/icons/ExpandMore'
 import DeleteIcon from '@material-ui/icons/Delete';
-import { IconButton } from '@material-ui/core';
+import { IconButton, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
+import swal from 'sweetalert';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
 
 interface TodoProps {
     todo:Todo;
@@ -26,26 +28,33 @@ export class TodoComponent extends React.Component<TodoProps, {toggle_todo: bool
     render() {
         return(
             <div className="col half-width">
-                <div className="row ctr">
-                    <Radio className="flx1" checked={this.props.todo.is_done} color="default" onClick={this.toggleTaskStatus}></Radio>
-                    <div className={`flx5 ctr-txt ${this.props.todo.is_done ? 'done-task' : ''}`}>{this.props.todo.header}</div>
-                    <ExpandMore className="material-icons" onClick={this.toggleTodo}></ExpandMore>
-                </div>
-                { this.state.toggle_todo &&
-                    <div className="col ctr extra-task-data">
-                        <div>
-                            <span className="task-prop">Description: </span>
-                            {this.props.todo.description}
+                <ExpansionPanel>
+                    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}
+                                           aria-label="Expand"
+                                           aria-controls="additional-actions1-content"
+                                           id={this.props.todo.id}>
+                        <FormControlLabel
+                            onClick={(event) => event.stopPropagation()}
+                            onFocus={(event) => event.stopPropagation()}
+                            control={
+                                <Checkbox checked={this.props.todo.is_done} onClick={this.toggleTaskStatus} />
+                            }
+                            label={this.props.todo.header}>
+                        </FormControlLabel>
+                    </ExpansionPanelSummary>
+                    <ExpansionPanelDetails>
+                        <div className="extra-task-data">
+                            <div> {this.props.todo.description} </div>
+                            <div>
+                                <span className="task-prop">Creation Date: </span>
+                                {this.props.todo.creation_date.toLocaleDateString()}
+                            </div>
+                            <IconButton aria-label="delete" onClick={this.removeTodoTask}>
+                                <DeleteIcon color="action" titleAccess="Delete task" className="material-icons"></DeleteIcon>
+                            </IconButton>
                         </div>
-                        <div>
-                            <span className="task-prop">Creation Date: </span>
-                            {this.props.todo.creation_date.toLocaleDateString()}
-                        </div>
-                        <IconButton aria-label="delete" onClick={this.removeTodoTask}>
-                            <DeleteIcon color="action" titleAccess="Delete task" className="material-icons"></DeleteIcon>
-                        </IconButton>
-                    </div>
-                }
+                    </ExpansionPanelDetails>
+                </ExpansionPanel>
             </div>
         )
     }
@@ -61,6 +70,19 @@ export class TodoComponent extends React.Component<TodoProps, {toggle_todo: bool
     }
 
     removeTodoTask():void {
-        this.props.removeTask();
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this task",
+            icon: "warning",
+            buttons: ['Cancel', true],
+            dangerMode: true,
+          })
+          .then((willDelete:boolean) => {
+            if (willDelete) {
+                this.props.removeTask();
+            } else {
+              swal("Your task is safe");
+            }
+          });
     }
 }
