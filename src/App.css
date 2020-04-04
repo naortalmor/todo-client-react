@@ -1,0 +1,42 @@
+.half-width {
+    width: 50%;
+}
+
+.ctr-txt {
+    text-align: center;
+}
+
+.done-task {
+    text-decoration: line-through;
+}
+
+.extra-task-data {
+    margin: 1em;
+}
+
+.task-prop {
+    font-weight: 500;
+    color: #890909;
+}
+
+.material-icons {
+    margin: 5px;
+    cursor: pointer;
+}
+
+
+.m-m {
+    margin: 5px;
+}
+
+.m-l {
+    margin: 10px;
+}
+
+.form-container {
+    border: 1px solid #3b4471;
+    margin: 20px;
+    padding: 1em 3em;
+    border-radius: 35px;
+    background-color: #f7dcd63d;
+}
