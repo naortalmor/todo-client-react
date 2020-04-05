@@ -42,3 +42,7 @@
     border-radius: 35px;
     background-color: #f7dcd63d;
 }
+
+.spc-eve {
+    justify-content: space-evenly;
+}

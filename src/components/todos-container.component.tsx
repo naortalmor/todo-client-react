@@ -1,7 +1,7 @@
 import React from 'react';
 import { Todo } from '../interfaces/todo.interface';
 import { initTodos, toggleTodoStatus, addTodo, removeTodo, removeSome } from '../store/actions';
-import { TodoComponent } from './todo.component';
+import TodoComponent from './todo.component';
 import { connect } from 'react-redux';
 import { AppState } from '../store/store';
 import axios, { AxiosResponse } from 'axios';
@@ -44,7 +44,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
         const todosList = this.props.todos && this.props.todos.map((todo:Todo) => 
             <TodoComponent key={todo.id} 
                            todo={todo}
-                           toggleTaskStatus={() => this.toggleStaus(todo)} 
+                           toggleTaskStatus={() => this.toggleStaus(todo.id)} 
                            removeTask={() => this.removeTodoTask(todo.id)}>
             </TodoComponent>)
 
@@ -81,11 +81,8 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
         })
     }
 
-    private toggleStaus(todo:Todo):void { 
-        axios.put<Todo>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/${todo.id}/`, {
-            ...todo,
-            is_done: !todo.is_done
-        }).then((res:AxiosResponse<Todo>) => (this.props.toggleStatus(todo.id)))
+    private toggleStaus(taskId:string):void { 
+        axios.post<Todo>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/${taskId}/toggle_done/`).then((res:AxiosResponse<Todo>) => (this.props.toggleStatus(taskId)))
     }
 
     private toggleAddTask():void {

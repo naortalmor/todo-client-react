@@ -29,7 +29,8 @@ export class AddTask extends React.Component<AddTaskProps, {newTask: Partial<Tod
         this.state = {
             newTask: {
                 header: '',
-                description: ''
+                description: '',
+                due_date: new Date()
             }
         }
         this.submitTask = this.submitTask.bind(this);
@@ -54,6 +55,12 @@ export class AddTask extends React.Component<AddTaskProps, {newTask: Partial<Tod
                                 onChange={this.handleChanges} 
                                 value={this.state.newTask.description}>
                         </TextField>
+                        <TextField id="due_date" 
+                                   label="Due date" 
+                                   type="date"
+                                   InputLabelProps={{shrink:true}}
+                                   value={this.state.newTask.due_date} 
+                                   onChange={this.handleChanges} />
                     </form>
                 </DialogContent>
                 <DialogActions>
@@ -71,7 +78,7 @@ export class AddTask extends React.Component<AddTaskProps, {newTask: Partial<Tod
     handleChanges(event:any) {
         const target = event.target;
         const id = target.id;
-        const value = target.value;
+        let value = target.value;
 
         this.setState((state, props) => ({
             newTask: {
