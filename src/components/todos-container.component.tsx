@@ -71,7 +71,12 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
 
     private fetchData():void {
         axios.get<Todo[]>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/`).then((res:AxiosResponse<Todo[]>) => {
-            const allTodos:Todo[] = res.data.map((todo:Todo) => ({...todo, creation_date: new Date(todo.creation_date)}))
+            const allTodos:Todo[] = res.data.map((todo:Todo) => (
+                {...todo, 
+                    creation_date: new Date(todo.creation_date),
+                    due_date: new Date(todo.due_date)
+                })
+                )
             this.props.insertTodos(allTodos)
         })
     }
@@ -93,7 +98,8 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
         axios.post<Todo>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/`, newTask).then((newTaskRespose:AxiosResponse<Todo>) => {
             const todo:Todo = {
                 ...newTaskRespose.data,
-                creation_date: new Date(newTaskRespose.data.creation_date)
+                creation_date: new Date(newTaskRespose.data.creation_date),
+                due_date: new Date(newTaskRespose.data.due_date)
             }
             swal("Your task has been created successfully!", {
                 icon: "success",
@@ -113,7 +119,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
             )
     }
 
-    removeAllDone():void {
+    private removeAllDone():void {
         const allDone:string[] = this.props.todos.filter((todo:Todo) => todo.is_done).map((todo:Todo) => todo.id)
         swal({
             title: `Are you sure that you want to delete ${allDone.length} tasks ?`,

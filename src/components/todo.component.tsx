@@ -49,6 +49,10 @@ export class TodoComponent extends React.Component<TodoProps, {toggle_todo: bool
                                 <span className="task-prop">Creation Date: </span>
                                 {this.props.todo.creation_date.toLocaleDateString()}
                             </div>
+                            <div>
+                                <span className="task-prop">Due Date: </span>
+                                {this.props.todo.creation_date.toLocaleDateString()}
+                            </div>
                             <IconButton aria-label="delete" onClick={this.removeTodoTask}>
                                 <DeleteIcon color="action" titleAccess="Delete task" className="material-icons"></DeleteIcon>
                             </IconButton>
