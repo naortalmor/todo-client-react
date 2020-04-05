@@ -27,7 +27,7 @@ export class TodoComponent extends React.Component<TodoProps, {toggle_todo: bool
 
     render() {
         return(
-            <div className="col half-width">
+            <div className="col" style={{width: '75%'}}>
                 <ExpansionPanel>
                     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}
                                            aria-label="Expand"

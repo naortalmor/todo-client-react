@@ -5,6 +5,7 @@ export const ADD_TODO = 'ADD_TODO';
 export const INIT_TODOS = 'INIT_TODOS';
 export const TOGGLE_STATUS = 'TOGGLE_STATUS';
 export const REMOVE_TODO = 'REMOVE_TODO';
+export const REMOVE_SOME = 'REMOVE_SOME';
 
 export function addTodo(todo:Todo):AppAction {
     return {
@@ -31,6 +32,13 @@ export function removeTodo(taskId:string):AppAction {
     return {
         type: REMOVE_TODO,
         payload: taskId
+    }
+}
+
+export function removeSome(tasksIds:string[]):AppAction {
+    return {
+        type: REMOVE_SOME,
+        payload: tasksIds
     }
 }
 
