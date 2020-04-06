@@ -7,6 +7,10 @@ export const TOGGLE_STATUS = 'TOGGLE_STATUS';
 export const REMOVE_TODO = 'REMOVE_TODO';
 export const REMOVE_SOME = 'REMOVE_SOME';
 
+export const CHANGE_MODE = 'CHANGE_MODE';
+
+export const CHANGE_SORT_FIELD = 'CHANGE_SORT_FIELD';
+
 export function addTodo(todo:Todo):AppAction {
     return {
         type: ADD_TODO,
@@ -39,6 +43,20 @@ export function removeSome(tasksIds:string[]):AppAction {
     return {
         type: REMOVE_SOME,
         payload: tasksIds
+    }
+}
+
+export function changeMode(newModeId:number):AppAction {
+    return {
+        type: CHANGE_MODE,
+        payload: newModeId
+    }
+}
+
+export function changeSortField(newSortField:string):AppAction {
+    return {
+        type: CHANGE_SORT_FIELD,
+        payload: newSortField
     }
 }
 

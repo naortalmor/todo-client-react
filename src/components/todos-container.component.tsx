@@ -1,6 +1,6 @@
 import React from 'react';
 import { Todo } from '../interfaces/todo.interface';
-import { initTodos, toggleTodoStatus, addTodo, removeTodo, removeSome } from '../store/actions';
+import { initTodos, toggleTodoStatus, addTodo, removeTodo, removeSome, changeSortField } from '../store/actions';
 import TodoComponent from './todo.component';
 import { connect } from 'react-redux';
 import { AppState } from '../store/store';
@@ -12,21 +12,32 @@ import { Dispatch } from 'redux';
 import swal from 'sweetalert';
 import { IconButton } from '@material-ui/core';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
+import SortIcon from '@material-ui/icons/Sort';
+import { getSortedTodos } from '../store/selectors';
+import { SortComponent } from './sort.component';
 
 interface ContainerProps {
     todos:Todo[];
+    sortField:string;
     insertTodos: (todos:Todo[]) => void;
     addTask: (todo:Todo) => void;
     toggleStatus: (todoId:string) => void,
     removeTodo: (todoId:string) => void,
-    removeSome: (todosIds:string[]) => void
+    removeSome: (todosIds:string[]) => void,
+    selectSortField: (sortField:string) => void
 }
 
-export class TodosContainerComponent extends React.Component<ContainerProps, {add_task: boolean}> {
+interface ContainerState {
+    add_task: boolean,
+    display_sort: boolean
+}
+
+export class TodosContainerComponent extends React.Component<ContainerProps, ContainerState> {
     constructor(props:any) {
         super(props);
         this.state = {
-            add_task: false
+            add_task: false,
+            display_sort: false
         }
 
         this.fetchData();
@@ -34,6 +45,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
         this.toggleAddTask = this.toggleAddTask.bind(this);
         this.addNewTask = this.addNewTask.bind(this);
         this.removeAllDone = this.removeAllDone.bind(this);
+        this.toggleSort = this.toggleSort.bind(this);
     }
 
     componentDidMount() {
@@ -52,12 +64,18 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
             <div className="col half-width ctr">
                 <div className="row ctr">
                     <IconButton aria-label="add" onClick={ this.toggleAddTask }>
-                        <AddCircleOutlineIcon color="primary" titleAccess="Add task" className="material-icons"></AddCircleOutlineIcon>
+                        <AddCircleOutlineIcon color="primary" titleAccess="Add task" className="material-icons" />
                     </IconButton>
                     <IconButton aria-label="remove-all-done" onClick={ this.removeAllDone }>
-                        <RemoveCircleOutlineIcon color="secondary" titleAccess="Remove all done" className="material-icons"></RemoveCircleOutlineIcon>
+                        <RemoveCircleOutlineIcon color="secondary" titleAccess="Remove all done" className="material-icons" />
+                    </IconButton>
+                    <IconButton aria-label="remove-all-done" onClick={ this.toggleSort }>
+                        <SortIcon color="primary" titleAccess="Sort" className="material-icons" />
                     </IconButton>
                 </div>
+                {this.state.display_sort &&
+                    <SortComponent sortBy={this.props.sortField} selectSortField={this.props.selectSortField}></SortComponent>
+                }
                 {todosList}
                 { this.state.add_task &&
                     <AddTask 
@@ -67,6 +85,13 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
                 }
             </div>
         );
+    }
+
+    private toggleSort():void {
+        this.setState((state, props) => ({
+            ...state,
+            display_sort: !state.display_sort
+        }))
     }
 
     private fetchData():void {
@@ -87,6 +112,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
 
     private toggleAddTask():void {
         this.setState((state, props) => ({
+            ...state,
             add_task: !state.add_task
         }))
     }
@@ -140,14 +166,15 @@ export class TodosContainerComponent extends React.Component<ContainerProps, {ad
     }
 }
 
-const mapStateToProps = (state:AppState) => ({todos: state.todos})
+const mapStateToProps = (state:AppState) => ({todos: getSortedTodos(state), sortField:state.todoSortField});
 const mapDispatchToProps = (dispatch:Dispatch) => {
     return {
         insertTodos: (todos:Todo[]) => dispatch(initTodos(todos)),
         addTask: (todo:Todo) => dispatch(addTodo(todo)),
         toggleStatus: (todoId:string) => dispatch(toggleTodoStatus(todoId)),
         removeTodo: (todoId:string) => dispatch(removeTodo(todoId)),
-        removeSome: (todosIds:string[]) => dispatch(removeSome(todosIds))
+        removeSome: (todosIds:string[]) => dispatch(removeSome(todosIds)),
+        selectSortField: (sortField:string) => dispatch(changeSortField(sortField))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(TodosContainerComponent);

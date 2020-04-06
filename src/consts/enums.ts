@@ -1,4 +1,9 @@
 export enum Modes {
-    TODO = 'TODO',
-    INTERVIEWS = 'INTERVIEWS'
+    TODO,
+    INTERVIEWS
+}
+
+export enum SortFields {
+    DUE_DATE = 'due_date',
+    IS_DONE = 'is_done'
 }

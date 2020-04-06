@@ -1,18 +1,17 @@
 import React from 'react';
 import './App.css';
-import TodosContainerComponent from './components/todos-container.component';
-
 import { Provider } from 'react-redux';
 import store from './store/store';
+import HomeComponent from './components/home.component'
 
-function App() {
-  return (
-    <Provider store={store}>
-      <div className="row ctr">
-        <TodosContainerComponent></TodosContainerComponent>
-      </div>
-    </Provider>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <HomeComponent></HomeComponent>
+      </Provider>
+    );
+  }
 }
 
 export default App;

@@ -1,6 +1,7 @@
 import { Todo } from './../interfaces/todo.interface';
 import { combineReducers } from 'redux';
-import { INIT_TODOS, AppAction, ADD_TODO, TOGGLE_STATUS, REMOVE_TODO, REMOVE_SOME } from './actions';
+import { INIT_TODOS, AppAction, ADD_TODO, TOGGLE_STATUS, REMOVE_TODO, REMOVE_SOME, CHANGE_MODE, CHANGE_SORT_FIELD } from './actions';
+import { Modes } from '../consts/enums';
 
 function todoReducer(state:Todo[] = [], action: AppAction):Todo[] {
     switch(action.type) {
@@ -19,8 +20,26 @@ function todoReducer(state:Todo[] = [], action: AppAction):Todo[] {
     }
 }
 
+function modesReducer(state:number = Modes.TODO, action:AppAction):number {
+    if(action.type === CHANGE_MODE) {
+        return action.payload
+    } else {
+        return state;
+    }
+}
+
+function sortFieldReducer(state:string = 'due_date', action:AppAction):string {
+    if(action.type === CHANGE_SORT_FIELD) {
+        return action.payload
+    } else {
+        return state;
+    }
+}
+
 const reducer = combineReducers({
-    todos: todoReducer
+    todos: todoReducer,
+    selectedModeIndex: modesReducer,
+    todoSortField: sortFieldReducer
 })
 
 export default reducer;
