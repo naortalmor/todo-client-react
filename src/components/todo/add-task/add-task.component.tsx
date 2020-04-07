@@ -1,11 +1,7 @@
 import React from 'react';
-import { Todo, FormTodo } from '../interfaces/todo.interface';
-import GenericTodoForm from './generic-todo-form.component';
-
-interface AddTaskProps {
-    addTask: (newTask:FormTodo) => void;
-    closeAddTask: () => void;
-}
+import { Todo, FormTodo } from '../../../interfaces/todo.interface';
+import { AddTaskProps } from './add-task.connector';
+import GenericTodoForm from '../generic-todo-form/generic-todo-form.connector';
 
 export class AddTask extends React.Component<AddTaskProps> {
     render() {

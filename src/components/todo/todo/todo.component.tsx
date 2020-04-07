@@ -1,20 +1,12 @@
 import React from 'react';
-import {Todo} from '../interfaces/todo.interface';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { IconButton, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails, createStyles, withStyles, Theme } from '@material-ui/core';
+import { IconButton, ExpansionPanel, ExpansionPanelSummary, ExpansionPanelDetails } from '@material-ui/core';
 import swal from 'sweetalert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import EditIcon from '@material-ui/icons/Edit';
-
-interface TodoProps {
-    todo:Todo;
-    toggleTaskStatus:() => void;
-    removeTask: () => void;
-    editTask: () => void;
-    classes:any;
-}
+import { TodoProps } from './todo.connector';
 
 export class TodoComponent extends React.Component<TodoProps, {toggle_todo: boolean}> {
     constructor(props:TodoProps) {
@@ -130,17 +122,3 @@ export class TodoComponent extends React.Component<TodoProps, {toggle_todo: bool
           });
     }
 }
-
-const styles = (theme:Theme) => createStyles({
-    bad: {
-        backgroundColor: '#ffcdd2'
-    },
-    med: {
-        backgroundColor: '#ffecb3'
-    },
-    ok: {
-        backgroundColor: '#c8e6c9'
-    }
-})
-
-export default withStyles(styles, {withTheme: true})(TodoComponent)

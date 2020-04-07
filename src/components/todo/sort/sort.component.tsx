@@ -1,6 +1,6 @@
 import React from 'react';
 import { Radio, FormControl, FormLabel, RadioGroup, FormControlLabel } from '@material-ui/core';
-import { SortFields } from '../consts/enums';
+import { SortFields } from '../../../consts/enums';
 
 interface SortProps {
     sortBy:string;

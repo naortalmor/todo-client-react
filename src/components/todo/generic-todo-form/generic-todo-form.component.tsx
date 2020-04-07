@@ -1,29 +1,9 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import { Todo, FormTodo } from '../interfaces/todo.interface';
+import { FormTodo } from '../../../interfaces/todo.interface';
 import TextField from '@material-ui/core/TextField';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Theme, createStyles, withStyles } from '@material-ui/core';
-
-interface GenericTodoFormProps {
-    todo:Todo;
-    classes:any;
-    title:string;
-    performAction: (newTask:FormTodo) => void;
-    close: () => void;
-}
-
-const styles = (theme:Theme) => createStyles({
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        margin: 'auto',
-        width: 'fit-conent'
-    },
-    formControl: {
-        marginTop: theme.spacing(2),
-        minWidth: 120,
-      }
-})
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import { GenericTodoFormProps } from './generic-todo-form.connector';
 
 export class GenericTodoForm extends React.Component<GenericTodoFormProps, {newTodoObj: FormTodo}> {
     constructor(props:GenericTodoFormProps) {
@@ -35,7 +15,7 @@ export class GenericTodoForm extends React.Component<GenericTodoFormProps, {newT
                 creation_date: this.props.todo.creation_date.toISOString().slice(0,10),
             }
         }
-        this.submitTask = this.submitTask.bind(this);
+        
         this.handleChanges = this.handleChanges.bind(this);
         this.getIfSaveDisabled = this.getIfSaveDisabled.bind(this);
     }
@@ -44,7 +24,9 @@ export class GenericTodoForm extends React.Component<GenericTodoFormProps, {newT
         const { classes } = this.props;
         return (
             <Dialog fullWidth={true} maxWidth="xs" open={true} onClose={() => this.props.close()} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">{this.props.title}</DialogTitle>
+                <DialogTitle id="form-dialog-title">
+                    {this.props.title}
+                </DialogTitle>
                 <DialogContent>
                     <form className={classes.form}>
                         <TextField id="header"
@@ -66,10 +48,13 @@ export class GenericTodoForm extends React.Component<GenericTodoFormProps, {newT
                     </form>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => this.props.close()} color="secondary">
+                    <Button onClick={() => this.props.close()} 
+                            color="secondary">
                         Cancel
                     </Button>
-                    <Button onClick={this.submitTask} color="primary" disabled={this.getIfSaveDisabled()}>
+                    <Button onClick={() => this.props.performAction(this.state.newTodoObj)} 
+                            color="primary" 
+                            disabled={this.getIfSaveDisabled()}>
                         Save
                     </Button>
                 </DialogActions>
@@ -90,10 +75,6 @@ export class GenericTodoForm extends React.Component<GenericTodoFormProps, {newT
         }))
     }
 
-    submitTask() {
-        this.props.performAction(this.state.newTodoObj);
-    }
-
     private getIfSaveDisabled():boolean {
         return this.state.newTodoObj.description === '' || 
                this.state.newTodoObj.header === '' || 
@@ -101,4 +82,3 @@ export class GenericTodoForm extends React.Component<GenericTodoFormProps, {newT
     }
 }
 
-export default withStyles(styles, {withTheme: true})(GenericTodoForm)

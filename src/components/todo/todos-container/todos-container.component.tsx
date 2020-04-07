@@ -1,41 +1,17 @@
 import React from 'react';
-import { Todo, FormTodo } from '../interfaces/todo.interface';
-import { initTodos, toggleTodoStatus, addTodo, removeTodo, removeSome, changeSortField, openEditTodo, closeEditTodo, editTodo } from '../store/actions';
-import TodoComponent from './todo.component';
-import { connect } from 'react-redux';
-import { AppState } from '../store/store';
+import { Todo, FormTodo } from '../../../interfaces/todo.interface';
 import axios, { AxiosResponse } from 'axios';
-import { urlConfig } from '../consts/config';
+import { urlConfig } from '../../../consts/config';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import AddTask from './add-task.component';
-import { Dispatch } from 'redux';
+import AddTask from '../add-task/add-task.component';
 import swal from 'sweetalert';
 import { IconButton } from '@material-ui/core';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import SortIcon from '@material-ui/icons/Sort';
-import { getSortedTodos, getTodoToEdit } from '../store/selectors';
-import { SortComponent } from './sort.component';
-import EditTaskComponent from './edit-task.component';
-
-interface ContainerProps {
-    todos:Todo[];
-    sortField:string;
-    todoToEdit?:Todo;
-    insertTodos: (todos:Todo[]) => void;
-    addTask: (todo:Todo) => void;
-    toggleStatus: (todoId:string) => void,
-    removeTodo: (todoId:string) => void,
-    removeSome: (todosIds:string[]) => void,
-    selectSortField: (sortField:string) => void,
-    openEditTask: (taskToEditId:string) => void,
-    closeEditTask: () => void,
-    editTask: (newTodo:Todo) => void
-}
-
-interface ContainerState {
-    add_task: boolean,
-    display_sort: boolean
-}
+import { SortComponent } from '../sort/sort.component';
+import EditTaskComponent from '../edit-task/edit-task.component';
+import { ContainerProps, ContainerState } from './todos-container.connector';
+import TodoComponent from '../todo/todo.connector';
 
 export class TodosContainerComponent extends React.Component<ContainerProps, ContainerState> {
     constructor(props:any) {
@@ -196,23 +172,3 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
           });
     }
 }
-
-const mapStateToProps = (state:AppState) => ({
-        todos: getSortedTodos(state.todos, state.todoSortField),
-        sortField: state.todoSortField,
-        todoToEdit: getTodoToEdit(state.todos, state.todoToEditId)
-    });
-const mapDispatchToProps = (dispatch:Dispatch) => {
-    return {
-        insertTodos: (todos:Todo[]) => dispatch(initTodos(todos)),
-        addTask: (todo:Todo) => dispatch(addTodo(todo)),
-        toggleStatus: (todoId:string) => dispatch(toggleTodoStatus(todoId)),
-        removeTodo: (todoId:string) => dispatch(removeTodo(todoId)),
-        removeSome: (todosIds:string[]) => dispatch(removeSome(todosIds)),
-        selectSortField: (sortField:string) => dispatch(changeSortField(sortField)),
-        openEditTask: (taskToEditId:string) => dispatch(openEditTodo(taskToEditId)),
-        closeEditTask: () => dispatch(closeEditTodo()),
-        editTask: (newTodo:Todo) => dispatch(editTodo(newTodo))
-    }
-}
-export default connect(mapStateToProps, mapDispatchToProps)(TodosContainerComponent);

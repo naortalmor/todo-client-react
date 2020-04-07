@@ -1,12 +1,7 @@
 import React from 'react';
-import { Todo, FormTodo } from '../interfaces/todo.interface';
-import GenericTodoForm from './generic-todo-form.component';
-
-interface EditTaskProps {
-    todo:Todo;
-    performEdit: (todo:FormTodo) => void;
-    closeEditTask: () => void;
-}
+import { FormTodo } from '../../../interfaces/todo.interface';
+import GenericTodoForm from '../generic-todo-form/generic-todo-form.connector';
+import { EditTaskProps } from './edit-task.connector';
 
 export class EditTaskComponent extends React.Component<EditTaskProps> {
     render() {

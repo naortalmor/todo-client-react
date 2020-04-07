@@ -1,27 +1,19 @@
 import React from 'react';
-import { AppState } from '../store/store';
-import { Dispatch } from 'redux';
-import { changeMode } from '../store/actions';
-import { connect } from 'react-redux';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { Modes } from '../consts/enums';
-import TodosContainerComponent from './todos-container.component';
-import { InterviewsContainerComponent } from './interviews-container.component';
+import { Modes } from '../../../consts/enums';
+import TodosContainerComponent from '../todos-container/todos-container.connector';
+import { InterviewsContainerComponent } from '../../interviews/interviews-container.component';
+import { HomeProps } from './home.connector';
 
-
-interface HomeProps {
-    changeMode: (newModeIndex:number) => void;
-    selectedModeIndex:number;
-}
-
-class HomeComponent extends React.Component<HomeProps> {
+export class HomeComponent extends React.Component<HomeProps> {
     constructor(props:HomeProps) {
         super(props);
 
         this.handleChange = this.handleChange.bind(this);
     }
+    
     render() {
         return (
             <div>
@@ -54,19 +46,10 @@ class HomeComponent extends React.Component<HomeProps> {
         this.props.changeMode(newModeIndex);
     }
 
-    globalTabsProps(mode:number) {
+    private globalTabsProps(mode:number) {
         return {
           id: `${mode}`,
           'aria-controls': `simple-tabpanel-${mode }`,
         };
       }
 }
-
-const mapStateToProps = (state:AppState) => ({selectedModeIndex: state.selectedModeIndex});
-const mapDispatchToProps = (dispatch:Dispatch) => {
-  return {
-    changeMode: (newModeIndex:number) => dispatch(changeMode(newModeIndex))
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomeComponent)

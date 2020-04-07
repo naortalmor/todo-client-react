@@ -1,7 +1,7 @@
-import { Todo } from './../interfaces/todo.interface';
-import { SortFields } from '../consts/enums';
+import { Todo } from './../../interfaces/todo.interface';
+import { SortFields } from '../../consts/enums';
 
-export const getSortedTodos = (todos:Todo[], sortField:string): Todo[] => {
+export const getSortedTodos = (todos:Todo[], sortField:string):Todo[] => {
     switch(sortField) {
         case SortFields.DUE_DATE:
             return todos.sort((first:Todo, second:Todo) => first.due_date.getDate() > second.due_date.getDate() ? 1 : -1)
