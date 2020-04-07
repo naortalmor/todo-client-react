@@ -1,100 +1,29 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
-import { Todo } from '../interfaces/todo.interface';
-import TextField from '@material-ui/core/TextField';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Theme, createStyles, withStyles } from '@material-ui/core';
+import { Todo, FormTodo } from '../interfaces/todo.interface';
+import GenericTodoForm from './generic-todo-form.component';
 
 interface AddTaskProps {
-    addTask: (newTask:Partial<Todo>) => void;
+    addTask: (newTask:FormTodo) => void;
     closeAddTask: () => void;
-    classes:any;
 }
 
-const styles =(theme:Theme) => createStyles({
-    form: {
-        display: 'flex',
-        flexDirection: 'column',
-        margin: 'auto',
-        width: 'fit-conent'
-    },
-    formControl: {
-        marginTop: theme.spacing(2),
-        minWidth: 120,
-      }
-})
-
-export class AddTask extends React.Component<AddTaskProps, {newTask: Partial<Todo>}> {
-    constructor(props:AddTaskProps) {
-        super(props);
-        this.state = {
-            newTask: {
-                header: '',
-                description: '',
-                due_date: new Date()
-            }
-        }
-        this.submitTask = this.submitTask.bind(this);
-        this.handleChanges = this.handleChanges.bind(this);
-        this.onCacnel = this.onCacnel.bind(this);
-    }
-
+export class AddTask extends React.Component<AddTaskProps> {
     render() {
-        const { classes } = this.props;
+        const emptyTodo:Todo = {
+            header: '',
+            description: '',
+            creation_date: new Date(),
+            due_date: new Date(),
+            is_done: false
+        }
+
         return (
-            <Dialog fullWidth={true} maxWidth="xs" open={true} onClose={this.onCacnel} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Add New Todo Task</DialogTitle>
-                <DialogContent>
-                    <form className={classes.form}>
-                        <TextField id="header"
-                                label="Header" 
-                                onChange={this.handleChanges} 
-                                value={this.state.newTask.header}>
-                        </TextField>
-                        <TextField id="description" 
-                                label="Description" 
-                                onChange={this.handleChanges} 
-                                value={this.state.newTask.description}>
-                        </TextField>
-                        <TextField id="due_date" 
-                                   label="Due date" 
-                                   type="date"
-                                   InputLabelProps={{shrink:true}}
-                                   value={this.state.newTask.due_date} 
-                                   onChange={this.handleChanges} />
-                    </form>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={this.onCacnel} color="secondary">
-                        Cancel
-                    </Button>
-                    <Button onClick={this.submitTask} color="primary">
-                        Save
-                    </Button>
-                </DialogActions>
-            </Dialog>
+            <GenericTodoForm todo={emptyTodo} 
+                             title="Add New Todo Task" 
+                             performAction={(newTodoObj:FormTodo) => this.props.addTask(newTodoObj)}
+                             close={this.props.closeAddTask}>
+            </GenericTodoForm>
         )
     }
-
-    handleChanges(event:any) {
-        const target = event.target;
-        const id = target.id;
-        let value = target.value;
-
-        this.setState((state, props) => ({
-            newTask: {
-                ...state.newTask,
-                [id]: value
-            }
-        }))
-    }
-
-    onCacnel():void {
-        this.props.closeAddTask();
-    }
-
-    submitTask() {
-        this.props.addTask(this.state.newTask);
-    }
 }
-
-export default withStyles(styles, {withTheme: true})(AddTask)
+export default AddTask;

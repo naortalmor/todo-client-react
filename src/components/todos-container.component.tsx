@@ -1,5 +1,5 @@
 import React from 'react';
-import { Todo, EditToDo } from '../interfaces/todo.interface';
+import { Todo, FormTodo } from '../interfaces/todo.interface';
 import { initTodos, toggleTodoStatus, addTodo, removeTodo, removeSome, changeSortField, openEditTodo, closeEditTodo, editTodo } from '../store/actions';
 import TodoComponent from './todo.component';
 import { connect } from 'react-redux';
@@ -62,9 +62,9 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
         const todosList = this.props.todos && this.props.todos.map((todo:Todo) => 
             <TodoComponent key={todo.id} 
                            todo={todo}
-                           toggleTaskStatus={() => this.toggleStaus(todo.id)} 
-                           removeTask={() => this.removeTodoTask(todo.id)}
-                           editTask={() => this.props.openEditTask(todo.id)}>
+                           toggleTaskStatus={() => this.toggleStaus(todo.id!)} 
+                           removeTask={() => this.removeTodoTask(todo.id!)}
+                           editTask={() => this.props.openEditTask(todo.id!)}>
             </TodoComponent>)
 
         return (
@@ -86,7 +86,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
                 {todosList}
                 { this.state.add_task &&
                     <AddTask 
-                        addTask={(newTask:Partial<Todo>) => this.addNewTask(newTask)} 
+                        addTask={(newTask:FormTodo) => this.addNewTask(newTask)} 
                         closeAddTask={this.toggleAddTask}>
                     </AddTask>
                 }
@@ -101,7 +101,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
         );
     }
 
-    private performEditTask(newTask:EditToDo):void {
+    private performEditTask(newTask:FormTodo):void {
         axios.put<Todo>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/${newTask.id}/`, newTask)
             .then((res:AxiosResponse<Todo>) => {
                 const todo:Todo = {
@@ -148,7 +148,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
         }))
     }
 
-    private addNewTask(newTask: Partial<Todo>):void {
+    private addNewTask(newTask: FormTodo):void {
         axios.post<Todo>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/`, newTask).then((newTaskRespose:AxiosResponse<Todo>) => {
             const todo:Todo = {
                 ...newTaskRespose.data,
@@ -174,7 +174,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
     }
 
     private removeAllDone():void {
-        const allDone:string[] = this.props.todos.filter((todo:Todo) => todo.is_done).map((todo:Todo) => todo.id)
+        const allDone:string[] = this.props.todos.filter((todo:Todo) => todo.is_done).map((todo:Todo) => todo.id!)
         swal({
             title: `Are you sure that you want to delete ${allDone.length} tasks ?`,
             text: "Once deleted, you will not be able to recover this task",

@@ -3,13 +3,13 @@ export interface Todo extends BaseTodo{
     due_date:Date;
 }
 
-export interface EditToDo extends BaseTodo{
+export interface FormTodo extends BaseTodo {
     creation_date:string;
     due_date:string;
 }
 
 interface BaseTodo {
-    id:string;
+    id?:string;
     header:string;
     description:string;
     is_done:boolean;   

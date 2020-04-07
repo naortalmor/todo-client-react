@@ -14,7 +14,7 @@ function todoReducer(state:Todo[] = [], action: AppAction):Todo[] {
         case REMOVE_TODO:
             return state.filter((todo:Todo) => todo.id !== action.payload)
         case REMOVE_SOME:
-            return state.filter((todo:Todo) => !(action.payload as string[]).includes(todo.id))
+            return state.filter((todo:Todo) => !(action.payload as string[]).includes(todo.id!))
         case EDIT_TODO:
             return state.map((todo:Todo) => todo.id === action.payload.id ? action.payload : todo);
         default:
