@@ -6,11 +6,13 @@ import swal from 'sweetalert';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import EditIcon from '@material-ui/icons/Edit';
 
 interface TodoProps {
     todo:Todo;
     toggleTaskStatus:() => void;
     removeTask: () => void;
+    editTask: () => void;
     classes:any;
 }
 
@@ -59,6 +61,9 @@ export class TodoComponent extends React.Component<TodoProps, {toggle_todo: bool
                                 </div>
                             </div>
                             <div style={{color:'red'}}>{remainingData.text}</div>
+                            <IconButton aria-label="edit" onClick={this.props.editTask}>
+                                <EditIcon color="action" titleAccess="Edit task" className="matrial-icons"></EditIcon>
+                            </IconButton>
                             <IconButton aria-label="delete" onClick={this.removeTodoTask}>
                                 <DeleteIcon color="action" titleAccess="Delete task" className="material-icons"></DeleteIcon>
                             </IconButton>

@@ -11,6 +11,10 @@ export const CHANGE_MODE = 'CHANGE_MODE';
 
 export const CHANGE_SORT_FIELD = 'CHANGE_SORT_FIELD';
 
+export const OPEN_EDIT_TODO = 'OPEN_EDIT_TODO';
+export const REMOVE_EDIT_TODO = 'REMOVE_EDIT_TODO';
+export const EDIT_TODO = 'EDIT_TODO';
+
 export function addTodo(todo:Todo):AppAction {
     return {
         type: ADD_TODO,
@@ -57,6 +61,27 @@ export function changeSortField(newSortField:string):AppAction {
     return {
         type: CHANGE_SORT_FIELD,
         payload: newSortField
+    }
+}
+
+export function openEditTodo(taskId:string):AppAction {
+    return {
+        type: OPEN_EDIT_TODO,
+        payload: taskId
+    }
+}
+
+export function closeEditTodo():AppAction {
+    return {
+        type: REMOVE_EDIT_TODO,
+        payload: ''
+    }
+}
+
+export function editTodo(newTodo:Todo):AppAction {
+    return {
+        type: EDIT_TODO,
+        payload: newTodo
     }
 }
 

@@ -7,12 +7,14 @@ export interface AppState {
     todos: Todo[],
     selectedModeIndex: number,
     todoSortField:string;
+    todoToEditId:string;
 }
 
 const initialState:AppState = {
     todos: [],
     selectedModeIndex: Modes.TODO,
-    todoSortField: 'due_date'
+    todoSortField: 'due_date',
+    todoToEditId: ''
 }
 
 const store = createStore(reducer, initialState);

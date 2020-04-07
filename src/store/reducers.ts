@@ -1,6 +1,6 @@
 import { Todo } from './../interfaces/todo.interface';
 import { combineReducers } from 'redux';
-import { INIT_TODOS, AppAction, ADD_TODO, TOGGLE_STATUS, REMOVE_TODO, REMOVE_SOME, CHANGE_MODE, CHANGE_SORT_FIELD } from './actions';
+import { INIT_TODOS, AppAction, ADD_TODO, TOGGLE_STATUS, REMOVE_TODO, REMOVE_SOME, CHANGE_MODE, CHANGE_SORT_FIELD, OPEN_EDIT_TODO, REMOVE_EDIT_TODO, EDIT_TODO } from './actions';
 import { Modes } from '../consts/enums';
 
 function todoReducer(state:Todo[] = [], action: AppAction):Todo[] {
@@ -15,6 +15,8 @@ function todoReducer(state:Todo[] = [], action: AppAction):Todo[] {
             return state.filter((todo:Todo) => todo.id !== action.payload)
         case REMOVE_SOME:
             return state.filter((todo:Todo) => !(action.payload as string[]).includes(todo.id))
+        case EDIT_TODO:
+            return state.map((todo:Todo) => todo.id === action.payload.id ? action.payload : todo);
         default:
             return state
     }
@@ -36,10 +38,23 @@ function sortFieldReducer(state:string = 'due_date', action:AppAction):string {
     }
 }
 
+function editTaskReducer(state:string = '', action:AppAction):string {
+    switch(action.type) {
+        case OPEN_EDIT_TODO:
+            return action.payload
+        case REMOVE_EDIT_TODO:
+            return action.payload;
+        default:
+            return state;
+
+    }
+}
+
 const reducer = combineReducers({
     todos: todoReducer,
     selectedModeIndex: modesReducer,
-    todoSortField: sortFieldReducer
+    todoSortField: sortFieldReducer,
+    todoToEditId: editTaskReducer
 })
 
 export default reducer;

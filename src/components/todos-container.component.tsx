@@ -1,6 +1,6 @@
 import React from 'react';
-import { Todo } from '../interfaces/todo.interface';
-import { initTodos, toggleTodoStatus, addTodo, removeTodo, removeSome, changeSortField } from '../store/actions';
+import { Todo, EditToDo } from '../interfaces/todo.interface';
+import { initTodos, toggleTodoStatus, addTodo, removeTodo, removeSome, changeSortField, openEditTodo, closeEditTodo, editTodo } from '../store/actions';
 import TodoComponent from './todo.component';
 import { connect } from 'react-redux';
 import { AppState } from '../store/store';
@@ -13,18 +13,23 @@ import swal from 'sweetalert';
 import { IconButton } from '@material-ui/core';
 import RemoveCircleOutlineIcon from '@material-ui/icons/RemoveCircleOutline';
 import SortIcon from '@material-ui/icons/Sort';
-import { getSortedTodos } from '../store/selectors';
+import { getSortedTodos, getTodoToEdit } from '../store/selectors';
 import { SortComponent } from './sort.component';
+import EditTaskComponent from './edit-task.component';
 
 interface ContainerProps {
     todos:Todo[];
     sortField:string;
+    todoToEdit?:Todo;
     insertTodos: (todos:Todo[]) => void;
     addTask: (todo:Todo) => void;
     toggleStatus: (todoId:string) => void,
     removeTodo: (todoId:string) => void,
     removeSome: (todosIds:string[]) => void,
-    selectSortField: (sortField:string) => void
+    selectSortField: (sortField:string) => void,
+    openEditTask: (taskToEditId:string) => void,
+    closeEditTask: () => void,
+    editTask: (newTodo:Todo) => void
 }
 
 interface ContainerState {
@@ -46,6 +51,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
         this.addNewTask = this.addNewTask.bind(this);
         this.removeAllDone = this.removeAllDone.bind(this);
         this.toggleSort = this.toggleSort.bind(this);
+        this.performEditTask = this.performEditTask.bind(this);
     }
 
     componentDidMount() {
@@ -57,7 +63,8 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
             <TodoComponent key={todo.id} 
                            todo={todo}
                            toggleTaskStatus={() => this.toggleStaus(todo.id)} 
-                           removeTask={() => this.removeTodoTask(todo.id)}>
+                           removeTask={() => this.removeTodoTask(todo.id)}
+                           editTask={() => this.props.openEditTask(todo.id)}>
             </TodoComponent>)
 
         return (
@@ -83,8 +90,31 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
                         closeAddTask={this.toggleAddTask}>
                     </AddTask>
                 }
+                {
+                    this.props.todoToEdit && 
+                    <EditTaskComponent todo={this.props.todoToEdit} 
+                                       performEdit={this.performEditTask} 
+                                       closeEditTask={() => this.props.closeEditTask()}>
+                    </EditTaskComponent>
+                }
             </div>
         );
+    }
+
+    private performEditTask(newTask:EditToDo):void {
+        axios.put<Todo>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/${newTask.id}/`, newTask)
+            .then((res:AxiosResponse<Todo>) => {
+                const todo:Todo = {
+                    ...res.data,
+                    creation_date: new Date(res.data.creation_date),
+                    due_date: new Date(res.data.due_date)
+                }
+                swal("Your task has been created successfully!", {
+                    icon: "success",
+                  });
+                this.props.closeEditTask();
+                this.props.editTask(todo);
+            })
     }
 
     private toggleSort():void {
@@ -107,7 +137,8 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
     }
 
     private toggleStaus(taskId:string):void { 
-        axios.post<Todo>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/${taskId}/toggle_done/`).then((res:AxiosResponse<Todo>) => (this.props.toggleStatus(taskId)))
+        axios.post<Todo>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/${taskId}/toggle_done/`)
+            .then((res:AxiosResponse<Todo>) => (this.props.toggleStatus(taskId)))
     }
 
     private toggleAddTask():void {
@@ -166,7 +197,11 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
     }
 }
 
-const mapStateToProps = (state:AppState) => ({todos: getSortedTodos(state), sortField:state.todoSortField});
+const mapStateToProps = (state:AppState) => ({
+        todos: getSortedTodos(state.todos, state.todoSortField),
+        sortField: state.todoSortField,
+        todoToEdit: getTodoToEdit(state.todos, state.todoToEditId)
+    });
 const mapDispatchToProps = (dispatch:Dispatch) => {
     return {
         insertTodos: (todos:Todo[]) => dispatch(initTodos(todos)),
@@ -174,7 +209,10 @@ const mapDispatchToProps = (dispatch:Dispatch) => {
         toggleStatus: (todoId:string) => dispatch(toggleTodoStatus(todoId)),
         removeTodo: (todoId:string) => dispatch(removeTodo(todoId)),
         removeSome: (todosIds:string[]) => dispatch(removeSome(todosIds)),
-        selectSortField: (sortField:string) => dispatch(changeSortField(sortField))
+        selectSortField: (sortField:string) => dispatch(changeSortField(sortField)),
+        openEditTask: (taskToEditId:string) => dispatch(openEditTodo(taskToEditId)),
+        closeEditTask: () => dispatch(closeEditTodo()),
+        editTask: (newTodo:Todo) => dispatch(editTodo(newTodo))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(TodosContainerComponent);
