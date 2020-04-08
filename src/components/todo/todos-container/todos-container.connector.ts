@@ -7,6 +7,8 @@ import { AppState } from '../../../store/store';
 import { getSortedTodos, getTodoToEdit } from '../../../store/todos/todos.selectors';
 import { openEditTodo, closeEditTodo } from '../../../store/edit-todo/edit-todo.actions';
 import { editTodo } from '../../../store/todos/todos.actions';
+import { Category } from '../../../interfaces/category';
+import { initCatgories } from '../../../store/categories/categories.actions';
 import { initTodos, 
          addTodo, 
          toggleTodoStatus, 
@@ -25,7 +27,8 @@ export interface ContainerProps {
     selectSortField: (sortField:string) => void,
     openEditTask: (taskToEditId:string) => void,
     closeEditTask: () => void,
-    editTask: (newTodo:Todo) => void
+    editTask: (newTodo:Todo) => void,
+    insertCategories: (categories:Category[]) => void
 }
 
 export interface ContainerState {
@@ -49,7 +52,8 @@ const mapDispatchToProps = (dispatch:Dispatch) => {
         selectSortField: (sortField:string) => dispatch(changeSortField(sortField)),
         openEditTask: (taskToEditId:string) => dispatch(openEditTodo(taskToEditId)),
         closeEditTask: () => dispatch(closeEditTodo()),
-        editTask: (newTodo:Todo) => dispatch(editTodo(newTodo))
+        editTask: (newTodo:Todo) => dispatch(editTodo(newTodo)),
+        insertCategories: (categories:Category[]) => dispatch(initCatgories(categories))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(TodosContainerComponent);

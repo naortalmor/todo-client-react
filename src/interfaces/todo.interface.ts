@@ -12,5 +12,6 @@ interface BaseTodo {
     id?:string;
     header:string;
     description:string;
-    is_done:boolean;   
+    is_done:boolean;
+    category_id:number;
 }

@@ -12,6 +12,7 @@ import { SortComponent } from '../sort/sort.component';
 import EditTaskComponent from '../edit-task/edit-task.component';
 import { ContainerProps, ContainerState } from './todos-container.connector';
 import TodoComponent from '../todo/todo.connector';
+import { Category } from '../../../interfaces/category';
 
 export class TodosContainerComponent extends React.Component<ContainerProps, ContainerState> {
     constructor(props:any) {
@@ -21,7 +22,6 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
             display_sort: false
         }
 
-        this.fetchData();
         this.toggleStaus = this.toggleStaus.bind(this);
         this.toggleAddTask = this.toggleAddTask.bind(this);
         this.addNewTask = this.addNewTask.bind(this);
@@ -31,7 +31,8 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
     }
 
     componentDidMount() {
-        this.fetchData();
+        this.fetchTodos();
+        this.fetchCategories()
     }
 
     render() {
@@ -100,7 +101,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
         }))
     }
 
-    private fetchData():void {
+    private fetchTodos():void {
         axios.get<Todo[]>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/`).then((res:AxiosResponse<Todo[]>) => {
             const allTodos:Todo[] = res.data.map((todo:Todo) => (
                 {...todo, 
@@ -109,6 +110,12 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
                 })
                 )
             this.props.insertTodos(allTodos)
+        })
+    }
+
+    private fetchCategories():void {
+        axios.get<Category[]>(`http://${urlConfig.url}:${urlConfig.port}/api/categories/`).then((res:AxiosResponse<Category[]>) => {
+            this.props.insertCategories(res.data)
         })
     }
 

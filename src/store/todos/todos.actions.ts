@@ -1,5 +1,6 @@
 import { Todo } from './../../interfaces/todo.interface';
 import { AppAction } from '../../interfaces/app-action.interface';
+
 export const ADD_TODO = 'ADD_TODO';
 export const INIT_TODOS = 'INIT_TODOS';
 export const TOGGLE_STATUS = 'TOGGLE_STATUS';
