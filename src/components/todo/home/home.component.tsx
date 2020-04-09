@@ -23,9 +23,7 @@ export class HomeComponent extends React.Component<HomeProps> {
                         <Tab label="Interviews" {...this.globalTabsProps(Modes.INTERVIEWS)} />
                     </Tabs>
                 </AppBar>
-                <div className="row ctr">
-                    { this.renderAppByMode(this.props.selectedModeIndex) }
-                </div>
+                { this.renderAppByMode(this.props.selectedModeIndex) }
             </div>
         )
     }

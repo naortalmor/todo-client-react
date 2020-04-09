@@ -11,8 +11,9 @@ import SortIcon from '@material-ui/icons/Sort';
 import { SortComponent } from '../sort/sort.component';
 import EditTaskComponent from '../edit-task/edit-task.component';
 import { ContainerProps, ContainerState } from './todos-container.connector';
-import TodoComponent from '../todo/todo.connector';
 import { Category } from '../../../interfaces/category';
+import { CategoryConainerComponent } from '../category-container/category-container.component';
+import {CategoriesManagementComponent} from '../categories-mgmt/categories-mgmt.component';
 
 export class TodosContainerComponent extends React.Component<ContainerProps, ContainerState> {
     constructor(props:any) {
@@ -28,6 +29,8 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
         this.removeAllDone = this.removeAllDone.bind(this);
         this.toggleSort = this.toggleSort.bind(this);
         this.performEditTask = this.performEditTask.bind(this);
+        this.removeTodoTask = this.removeTodoTask.bind(this);
+        this.addNewCategory = this.addNewCategory.bind(this);
     }
 
     componentDidMount() {
@@ -36,46 +39,67 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
     }
 
     render() {
-        const todosList = this.props.todos && this.props.todos.map((todo:Todo) => 
-            <TodoComponent key={todo.id} 
-                           todo={todo}
-                           toggleTaskStatus={() => this.toggleStaus(todo.id!)} 
-                           removeTask={() => this.removeTodoTask(todo.id!)}
-                           editTask={() => this.props.openEditTask(todo.id!)}>
-            </TodoComponent>)
+        const categoriesList = this.props.categories && this.props.categories.map((category:Category) => 
+            <CategoryConainerComponent key={category.id} 
+                                       category={category}
+                                       todos={this.props.todos.filter((todo:Todo) => todo.category_id === category.id)}
+                                       toggleTaskStatus={this.toggleStaus}
+                                       removeTask={this.removeTodoTask}
+                                       openEditTask={this.props.openEditTask}>
+            </CategoryConainerComponent>)
 
         return (
-            <div className="col half-width ctr">
-                <div className="row ctr">
-                    <IconButton aria-label="add" onClick={ this.toggleAddTask }>
-                        <AddCircleOutlineIcon color="primary" titleAccess="Add task" className="material-icons" />
-                    </IconButton>
-                    <IconButton aria-label="remove-all-done" onClick={ this.removeAllDone }>
-                        <RemoveCircleOutlineIcon color="secondary" titleAccess="Remove all done" className="material-icons" />
-                    </IconButton>
-                    <IconButton aria-label="remove-all-done" onClick={ this.toggleSort }>
-                        <SortIcon color="primary" titleAccess="Sort" className="material-icons" />
-                    </IconButton>
+            <div className="row ctr">
+                <div className="flx1">
+                    <CategoriesManagementComponent categories={this.props.categories} 
+                                                   addCategory={this.addNewCategory}>
+                    </CategoriesManagementComponent>
                 </div>
-                {this.state.display_sort &&
-                    <SortComponent sortBy={this.props.sortField} selectSortField={this.props.selectSortField}></SortComponent>
-                }
-                {todosList}
-                { this.state.add_task &&
-                    <AddTask 
-                        addTask={(newTask:FormTodo) => this.addNewTask(newTask)} 
-                        closeAddTask={this.toggleAddTask}>
-                    </AddTask>
-                }
-                {
-                    this.props.todoToEdit && 
-                    <EditTaskComponent todo={this.props.todoToEdit} 
-                                       performEdit={this.performEditTask} 
-                                       closeEditTask={() => this.props.closeEditTask()}>
-                    </EditTaskComponent>
-                }
+                <div className="col half-width ctr flx4">
+                    <div className="row ctr">
+                        <IconButton aria-label="add" onClick={ this.toggleAddTask }>
+                            <AddCircleOutlineIcon color="primary" titleAccess="Add task" className="material-icons" />
+                        </IconButton>
+                        <IconButton aria-label="remove-all-done" onClick={ this.removeAllDone }>
+                            <RemoveCircleOutlineIcon color="secondary" titleAccess="Remove all done" className="material-icons" />
+                        </IconButton>
+                        <IconButton aria-label="remove-all-done" onClick={ this.toggleSort }>
+                            <SortIcon color="primary" titleAccess="Sort" className="material-icons" />
+                        </IconButton>
+                    </div>
+                    {this.state.display_sort &&
+                        <SortComponent sortBy={this.props.sortField} selectSortField={this.props.selectSortField}></SortComponent>
+                    }
+                    {categoriesList}
+                    { this.state.add_task &&
+                        <AddTask
+                            addTask={(newTask:FormTodo) => this.addNewTask(newTask)} 
+                            closeAddTask={this.toggleAddTask} 
+                            categories={this.props.categories} >
+                        </AddTask>
+                    }
+                    {
+                        this.props.todoToEdit && 
+                        <EditTaskComponent todo={this.props.todoToEdit} 
+                                        categories={this.props.categories}
+                                        performEdit={this.performEditTask} 
+                                        closeEditTask={() => this.props.closeEditTask()}>
+                        </EditTaskComponent>
+                    }
+                </div>
             </div>
         );
+    }
+
+    private addNewCategory(categoryName:string):void {
+        axios.post<Category>(`http://${urlConfig.url}:${urlConfig.port}/api/categories/`, {name: categoryName})
+            .then((res:AxiosResponse<Category>) => {
+                swal(`The category ${categoryName} created successfully`, {
+                    icon: "success",
+                  });
+
+                this.props.addCategory(res.data);
+            })
     }
 
     private performEditTask(newTask:FormTodo):void {

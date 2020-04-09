@@ -16,6 +16,7 @@ export class AddTask extends React.Component<AddTaskProps> {
 
         return (
             <GenericTodoForm todo={emptyTodo} 
+                             categories={this.props.categories}
                              title="Add New Todo Task" 
                              performAction={(newTodoObj:FormTodo) => this.props.addTask(newTodoObj)}
                              close={this.props.closeAddTask}>

@@ -1,3 +1,4 @@
+import { Category } from './../../../interfaces/category';
 import { Theme, createStyles, withStyles } from '@material-ui/core';
 import { GenericTodoForm } from './generic-todo-form.component';
 import { Todo, FormTodo } from '../../../interfaces/todo.interface';
@@ -6,6 +7,7 @@ export interface GenericTodoFormProps {
     todo:Todo;
     classes:any;
     title:string;
+    categories: Category[];
     performAction: (newTask:FormTodo) => void;
     close: () => void;
 }

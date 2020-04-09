@@ -7,6 +7,7 @@ export class EditTaskComponent extends React.Component<EditTaskProps> {
     render() {
         return (
             <GenericTodoForm todo={this.props.todo} 
+                             categories={this.props.categories}
                              title="Edit task" 
                              performAction={(newTodoObj:FormTodo) => this.props.performEdit(newTodoObj)}
                              close={this.props.closeEditTask}>

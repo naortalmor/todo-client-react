@@ -1,3 +1,4 @@
+import { Category } from './../../../interfaces/category';
 import { changeSortField } from './../../../store/sort/sort.actions';
 import { TodosContainerComponent } from './todos-container.component';
 import { Todo } from './../../../interfaces/todo.interface';
@@ -7,8 +8,7 @@ import { AppState } from '../../../store/store';
 import { getSortedTodos, getTodoToEdit } from '../../../store/todos/todos.selectors';
 import { openEditTodo, closeEditTodo } from '../../../store/edit-todo/edit-todo.actions';
 import { editTodo } from '../../../store/todos/todos.actions';
-import { Category } from '../../../interfaces/category';
-import { initCatgories } from '../../../store/categories/categories.actions';
+import { initCatgories, addCategory } from '../../../store/categories/categories.actions';
 import { initTodos, 
          addTodo, 
          toggleTodoStatus, 
@@ -17,6 +17,7 @@ import { initTodos,
 
 export interface ContainerProps {
     todos:Todo[];
+    categories: Category[];
     sortField:string;
     todoToEdit?:Todo;
     insertTodos: (todos:Todo[]) => void;
@@ -28,7 +29,8 @@ export interface ContainerProps {
     openEditTask: (taskToEditId:string) => void,
     closeEditTask: () => void,
     editTask: (newTodo:Todo) => void,
-    insertCategories: (categories:Category[]) => void
+    insertCategories: (categories:Category[]) => void,
+    addCategory: (categeory:Category) => void
 }
 
 export interface ContainerState {
@@ -38,6 +40,7 @@ export interface ContainerState {
 
 const mapStateToProps = (state:AppState) => ({
     todos: getSortedTodos(state.todos, state.todoSortField),
+    categories: state.categories,
     sortField: state.todoSortField,
     todoToEdit: getTodoToEdit(state.todos, state.todoToEditId)
 });
@@ -53,7 +56,8 @@ const mapDispatchToProps = (dispatch:Dispatch) => {
         openEditTask: (taskToEditId:string) => dispatch(openEditTodo(taskToEditId)),
         closeEditTask: () => dispatch(closeEditTodo()),
         editTask: (newTodo:Todo) => dispatch(editTodo(newTodo)),
-        insertCategories: (categories:Category[]) => dispatch(initCatgories(categories))
+        insertCategories: (categories:Category[]) => dispatch(initCatgories(categories)),
+        addCategory: (category:Category) => dispatch(addCategory(category))
     }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(TodosContainerComponent);

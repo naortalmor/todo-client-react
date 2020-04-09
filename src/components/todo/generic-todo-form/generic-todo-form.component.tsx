@@ -2,8 +2,9 @@ import React from 'react';
 import Button from '@material-ui/core/Button';
 import { FormTodo } from '../../../interfaces/todo.interface';
 import TextField from '@material-ui/core/TextField';
-import { Dialog, DialogTitle, DialogContent, DialogActions } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Select, MenuItem, FormControl, InputLabel } from '@material-ui/core';
 import { GenericTodoFormProps } from './generic-todo-form.connector';
+import { Category } from '../../../interfaces/category';
 
 export class GenericTodoForm extends React.Component<GenericTodoFormProps, {newTodoObj: FormTodo}> {
     constructor(props:GenericTodoFormProps) {
@@ -22,6 +23,7 @@ export class GenericTodoForm extends React.Component<GenericTodoFormProps, {newT
 
     render() {
         const { classes } = this.props;
+        const menuItems = this.props.categories && this.props.categories.map((category:Category) => <MenuItem value={category.id}>{category.name}</MenuItem>)
         return (
             <Dialog fullWidth={true} maxWidth="xs" open={true} onClose={() => this.props.close()} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">
@@ -45,6 +47,16 @@ export class GenericTodoForm extends React.Component<GenericTodoFormProps, {newT
                                    InputLabelProps={{shrink:true}}
                                    value={this.state.newTodoObj.due_date} 
                                    onChange={this.handleChanges} />
+                        <FormControl>
+                            <InputLabel>Category</InputLabel>
+                            <Select labelId="category"
+                                    id="category_id"
+                                    name="category_id"
+                                    onChange={this.handleChanges}
+                                    value={this.state.newTodoObj.category_id} >
+                                   {menuItems}
+                            </Select>
+                        </FormControl>
                     </form>
                 </DialogContent>
                 <DialogActions>
@@ -64,7 +76,7 @@ export class GenericTodoForm extends React.Component<GenericTodoFormProps, {newT
 
     handleChanges(event:any) {
         const target = event.target;
-        const id = target.id;
+        const id = target.id || target.name;
         let value = target.value;
 
         this.setState((state, props) => ({

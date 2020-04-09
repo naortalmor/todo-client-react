@@ -30,6 +30,10 @@ code {
   flex: 1;
 }
 
+.flx4 {
+  flex: 4
+}
+
 .flx5 {
   flex: 5;
 }
