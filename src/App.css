@@ -65,10 +65,8 @@
 }
 
 .category-title {
-    margin: 15px;
     font-size: larger;
     font-weight: 500;
-    padding: 0.5em 2em;
     color: #3f51b5;
 }
 
@@ -80,4 +78,8 @@
 .category-mgmt-container {
     border: 1px solid black;
     border-radius: 15px;
+}
+
+.cat-header {
+    margin: 0.5em 7em;
 }

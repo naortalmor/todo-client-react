@@ -13,6 +13,10 @@ export interface CategoryContainerProps {
     openEditTask: (todoId:string) => void
 }
 
+export interface CategoryContainerState {
+    isExpended:boolean;
+}
+
 const mapStateToProps = (state:AppState) => ({
 });
 
