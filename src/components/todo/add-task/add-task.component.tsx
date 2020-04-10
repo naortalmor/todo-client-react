@@ -11,7 +11,8 @@ export class AddTask extends React.Component<AddTaskProps> {
             creation_date: new Date(),
             due_date: new Date(),
             is_done: false,
-            category_id: 0
+            category_id: 0,
+            user_id: 0
         }
 
         return (

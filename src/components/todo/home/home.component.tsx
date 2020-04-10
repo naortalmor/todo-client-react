@@ -6,32 +6,45 @@ import { Modes } from '../../../consts/enums';
 import TodosContainerComponent from '../todos-container/todos-container.connector';
 import { InterviewsContainerComponent } from '../../interviews/interviews-container.component';
 import { HomeProps } from './home.connector';
+import { Auth } from '../../../services/auth.service';
+import { LoginComponent } from '../../login/login.component';
 
 export class HomeComponent extends React.Component<HomeProps> {
     constructor(props:HomeProps) {
         super(props);
 
         this.handleChange = this.handleChange.bind(this);
+        this.renderAppByMode = this.renderAppByMode.bind(this);
+        
+        let user = Auth.getConnectedUser();
+        user && this.props.initConnectedUser(user);
     }
     
     render() {
-        return (
-            <div>
-                <AppBar position="static">
-                    <Tabs value={this.props.selectedModeIndex} onChange={this.handleChange} >
-                        <Tab label="Todo" {...this.globalTabsProps(Modes.TODO)} />
-                        <Tab label="Interviews" {...this.globalTabsProps(Modes.INTERVIEWS)} />
-                    </Tabs>
-                </AppBar>
-                { this.renderAppByMode(this.props.selectedModeIndex) }
-            </div>
-        )
+        if (this.props.user.id) {
+            return (
+                <div>
+                    <AppBar position="static">
+                        <Tabs value={this.props.selectedModeIndex} onChange={this.handleChange} >
+                            <Tab label="Todo" {...this.globalTabsProps(Modes.TODO)} />
+                            <Tab label="Interviews" {...this.globalTabsProps(Modes.INTERVIEWS)} />
+                        </Tabs>
+                    </AppBar>
+                    { this.renderAppByMode(this.props.selectedModeIndex) }
+                </div>
+            )
+        } else {
+            return (
+                <LoginComponent initUser={this.props.initConnectedUser}>
+                </LoginComponent>
+            )
+        }
     }
 
     private renderAppByMode(selectedModeIndex:number) {
         switch(selectedModeIndex) {
             case Modes.TODO:
-                return <TodosContainerComponent></TodosContainerComponent>
+                return <TodosContainerComponent user={this.props.user}></TodosContainerComponent>
             case Modes.INTERVIEWS:
                 return <InterviewsContainerComponent></InterviewsContainerComponent>
             default:

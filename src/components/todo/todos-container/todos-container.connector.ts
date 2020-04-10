@@ -1,3 +1,4 @@
+import { User } from './../../../interfaces/user';
 import { Category } from './../../../interfaces/category';
 import { changeSortField } from './../../../store/sort/sort.actions';
 import { TodosContainerComponent } from './todos-container.component';
@@ -17,6 +18,7 @@ import { initTodos,
 
 export interface ContainerProps {
     todos:Todo[];
+    user:User;
     categories: Category[];
     sortField:string;
     todoToEdit?:Todo;

@@ -92,13 +92,16 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
     }
 
     private addNewCategory(categoryName:string):void {
-        axios.post<Category>(`http://${urlConfig.url}:${urlConfig.port}/api/categories/`, {name: categoryName})
+        axios.post<Category>(`http://${urlConfig.url}:${urlConfig.port}/api/categories/`, {name: categoryName, user_id: this.props.user.id})
             .then((res:AxiosResponse<Category>) => {
                 swal(`The category ${categoryName} created successfully`, {
                     icon: "success",
                   });
 
-                this.props.addCategory(res.data);
+                this.props.addCategory({
+                    id: res.data.id,
+                    name: res.data.name
+                });
             })
     }
 
@@ -126,7 +129,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
     }
 
     private fetchTodos():void {
-        axios.get<Todo[]>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/`).then((res:AxiosResponse<Todo[]>) => {
+        axios.get<Todo[]>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/?userid=${this.props.user.id}`).then((res:AxiosResponse<Todo[]>) => {
             const allTodos:Todo[] = res.data.map((todo:Todo) => (
                 {...todo, 
                     creation_date: new Date(todo.creation_date),
@@ -138,7 +141,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
     }
 
     private fetchCategories():void {
-        axios.get<Category[]>(`http://${urlConfig.url}:${urlConfig.port}/api/categories/`).then((res:AxiosResponse<Category[]>) => {
+        axios.get<Category[]>(`http://${urlConfig.url}:${urlConfig.port}/api/categories/?userid=${this.props.user.id}`).then((res:AxiosResponse<Category[]>) => {
             this.props.insertCategories(res.data)
         })
     }
@@ -156,7 +159,7 @@ export class TodosContainerComponent extends React.Component<ContainerProps, Con
     }
 
     private addNewTask(newTask: FormTodo):void {
-        axios.post<Todo>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/`, newTask).then((newTaskRespose:AxiosResponse<Todo>) => {
+        axios.post<Todo>(`http://${urlConfig.url}:${urlConfig.port}/api/todo/`, {...newTask, user_id: this.props.user.id}).then((newTaskRespose:AxiosResponse<Todo>) => {
             const todo:Todo = {
                 ...newTaskRespose.data,
                 creation_date: new Date(newTaskRespose.data.creation_date),
