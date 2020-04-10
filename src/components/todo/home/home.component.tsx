@@ -8,6 +8,9 @@ import { InterviewsContainerComponent } from '../../interviews/interviews-contai
 import { HomeProps } from './home.connector';
 import { Auth } from '../../../services/auth.service';
 import { LoginComponent } from '../../login/login.component';
+import { IconButton } from '@material-ui/core';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import { AccountComponent } from '../../account/account.component';
 
 export class HomeComponent extends React.Component<HomeProps> {
     constructor(props:HomeProps) {
@@ -24,11 +27,14 @@ export class HomeComponent extends React.Component<HomeProps> {
         if (this.props.user.id) {
             return (
                 <div>
-                    <AppBar position="static">
+                    <AppBar position="static" className={this.props.classes.spcRow}>
                         <Tabs value={this.props.selectedModeIndex} onChange={this.handleChange} >
                             <Tab label="Todo" {...this.globalTabsProps(Modes.TODO)} />
                             <Tab label="Interviews" {...this.globalTabsProps(Modes.INTERVIEWS)} />
                         </Tabs>
+                        <IconButton aria-label="account" onClick={() => this.props.changeMode(Modes.ACCOUNT)}>
+                            <AccountCircleIcon className={this.props.classes.accountBtn} titleAccess="account" />
+                        </IconButton>
                     </AppBar>
                     { this.renderAppByMode(this.props.selectedModeIndex) }
                 </div>
@@ -47,6 +53,10 @@ export class HomeComponent extends React.Component<HomeProps> {
                 return <TodosContainerComponent user={this.props.user}></TodosContainerComponent>
             case Modes.INTERVIEWS:
                 return <InterviewsContainerComponent></InterviewsContainerComponent>
+            case Modes.ACCOUNT:
+                return <AccountComponent user={this.props.user} 
+                                         logout={this.props.logoutUser}>
+                       </AccountComponent>
             default:
                 return <div></div>
         }

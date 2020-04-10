@@ -9,16 +9,12 @@ export class LoginComponent extends React.Component<{initUser: (user:User) => vo
 
     render() {
         return (
-            <GoogleLogin clientId="235366402903-658ku15fjjjdnadc75k3ksvb68hvqbd7.apps.googleusercontent.com"
-                             render={renderProps => (
-                                <button className="button"
-                                    onClick={renderProps.onClick}
-                                    disabled={renderProps.disabled} >
-                                    Log in with Google
-                                </button>
-                                )}
-                            onSuccess={this.responseGoogle}
-                            onFailure={this.responseGoogle} />
+            <GoogleLogin clientId="235366402903-658ku15fjjjdnadc75k3ksvb68hvqbd7.apps.googleusercontent.com" 
+                         buttonText="Login With Google" 
+                         onSuccess={this.responseGoogle}
+                         onFailure={this.responseGoogle}
+                         cookiePolicy={'single_host_origin'}>
+            </GoogleLogin>
         )
     }
 

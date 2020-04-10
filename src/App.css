@@ -83,3 +83,13 @@
 .cat-header {
     margin: 0.5em 7em;
 }
+
+.account {
+    padding: 5em;
+    font-size: large;
+}
+
+.user-img {
+    border-radius: 30px;
+    margin: 2em;
+}

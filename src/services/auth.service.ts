@@ -11,4 +11,8 @@ export class Auth {
     static saveUserOnCache(user:User):void {
         localStorage.setItem('user', JSON.stringify(user));
     }
+
+    static logout():void {
+        localStorage.removeItem('user');
+    }
 }

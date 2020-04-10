@@ -1,6 +1,7 @@
 export enum Modes {
     TODO,
-    INTERVIEWS
+    INTERVIEWS,
+    ACCOUNT
 }
 
 export enum SortFields {

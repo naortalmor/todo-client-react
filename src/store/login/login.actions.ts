@@ -14,6 +14,6 @@ export const initUser = (user:User):AppAction => {
 export const removeUser = ():AppAction => {
     return {
         type: REMOVE_USER,
-        payload: undefined
+        payload: {}
     }
 }
