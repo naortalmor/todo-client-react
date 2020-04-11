@@ -4,13 +4,13 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { Modes } from '../../../consts/enums';
 import TodosContainerComponent from '../todos-container/todos-container.connector';
-import { InterviewsContainerComponent } from '../../interviews/interviews-container.component';
 import { HomeProps } from './home.connector';
 import { Auth } from '../../../services/auth.service';
 import { LoginComponent } from '../../login/login.component';
 import { IconButton } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { AccountComponent } from '../../account/account.component';
+import InterviewsContainerComponent from '../../interviews/interviews-container/interviews-container.connector';
 
 export class HomeComponent extends React.Component<HomeProps> {
     constructor(props:HomeProps) {
@@ -50,9 +50,9 @@ export class HomeComponent extends React.Component<HomeProps> {
     private renderAppByMode(selectedModeIndex:number) {
         switch(selectedModeIndex) {
             case Modes.TODO:
-                return <TodosContainerComponent user={this.props.user}></TodosContainerComponent>
+                return <TodosContainerComponent user={this.props.user} />
             case Modes.INTERVIEWS:
-                return <InterviewsContainerComponent></InterviewsContainerComponent>
+                return <InterviewsContainerComponent user={this.props.user} />
             case Modes.ACCOUNT:
                 return <AccountComponent user={this.props.user} 
                                          logout={this.props.logoutUser}>
