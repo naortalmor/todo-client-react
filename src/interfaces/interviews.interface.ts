@@ -1,22 +1,22 @@
 export interface Company {
-    id:number;
+    id:string;
     name:string;
     salary:number;
-    interviews_ids:number[];
+    interviews_ids:string[];
 }
 
 export interface Interview {
-    id:number;
+    id:string;
     company_id:number;
     type:string;
     status:string;
     explanation:string;
     date:Date;
-    questions_ids:number[];
+    questions_ids:string[];
 }
 
 export interface InterviewQuestion {
-    id:number;
+    id:string;
     text:string;
-    interview_id:number;
+    interview_id:string;
 }

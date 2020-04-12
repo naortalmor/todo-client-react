@@ -3,6 +3,7 @@ import { InterviewContainerProps } from './interviews-container.connector';
 import axios, { AxiosResponse } from 'axios';
 import { Company, Interview, InterviewQuestion } from '../../../interfaces/interviews.interface';
 import { urlConfig } from '../../../consts/config';
+import { CompanyComponent } from '../company/company.component';
 
 export class InterviewsContainerComponent extends React.Component<InterviewContainerProps> {
     constructor(props:InterviewContainerProps) {
@@ -18,21 +19,22 @@ export class InterviewsContainerComponent extends React.Component<InterviewConta
     }
 
     render() {
-        const companiesids = this.props.companies.map((comp:Company) => (<span>{comp.id}</span>));
-        const intIds = this.props.interviews.map((int:Interview) => (<span>{int.id}</span>));
-        const intQues = this.props.interviewQuestion.map((intque:InterviewQuestion) => (<span>{intque.id}</span>))
+        const companies = this.props.companies.map((company:Company) => {
+            // MAKE THIS SHIT PRETTIER
+
+            const allInterviews = this.props.interviews.filter((interview:Interview) => company.interviews_ids && company.interviews_ids.includes(interview.id));
+            const allInterviewIds = allInterviews.map((curr:Interview) => curr.id)
+            const allQuestions = this.props.interviewQuestion.filter((question:InterviewQuestion) => allInterviewIds.includes(question.interview_id))
+            return <CompanyComponent key={company.id} 
+                                     company={company} 
+                                     interviews={allInterviews}
+                                     interviewQuestions={allQuestions}>
+                   </CompanyComponent>
+        })
+
         return (
             <div>
-                <div>COMP</div>
-                {companiesids}
-                <br />
-                
-                <div>INTER</div>
-                {intIds}
-                <br />
-
-                <div>QUESTING</div>
-                {intQues}
+                {companies}
             </div>
         )
     }
